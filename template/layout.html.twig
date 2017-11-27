@@ -1,0 +1,162 @@
+{# sample-portal-alter-template/template/layout.html.twig #}
+{# Base layout #}
+{% extends 'itop-portal-base/portal/src/views/layout.html.twig' %}
+
+{# Note: Puts sidebar on top of the screen #}
+
+{# Sidebar navigation menu for normal screens #}
+{% block pNavigationSideMenuWrapper %}
+<nav class="navbar navbar-top navbar-default hidden-xs" id="sidebar" role="navigation">
+	<div class="container-fluid">
+		{# iTop logo and user infos #}
+		<div class="navbar-header">
+			<a class="navbar-brand" href="{{ app.url_generator.generate('p_home') }}">
+                {% if app['combodo.portal.instance.conf'].properties.logo is not null %}
+					<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
+                {% else %}
+					{{ constant('ITOP_APPLICATION_SHORT') }}
+                {% endif %}
+			</a>
+			<span class="navbar-text">
+				<div class="header_title">{% block pPageTitle %}{% if sPageTitle is defined and sPageTitle is not null %}{{ sPageTitle }} - {{ constant('ITOP_APPLICATION') }}{% else %}{{ 'Page:DefaultTitle'|dict_s }}{% endif %}{% endblock %}</div>
+				<div class="header_user">{{ sUserFullname }}</div>
+			</span>
+		</div>
+
+		{# Menu items #}
+		<div class="collapse navbar-collapse pull-right" id="navbar">
+			<ul class="nav navbar-nav navbar-right">
+				{# Handling bricks menu items #}
+				{# - Home brick #}
+				<li class="{% if oBrick is not defined %}active{% endif %}">
+					<a href="{{ app.url_generator.generate('p_home') }}">
+						<span class="brick_icon fa fa-home fa-2x"></span>
+						{{ 'Page:Home'|dict_s }}
+					</a>
+				</li>
+
+                {# - Checking if there are some bricks left to pu in a dropdown menu #}
+                {% set iActiveItems = 1 %}{# 1 because of Home #}
+                {% for brick in app['combodo.portal.instance.conf'].bricks_ordering.navigation_menu %}
+                    {% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
+                        {%  set iActiveItems = iActiveItems + 1 %}
+                    {% endif %}
+                {% endfor %}
+
+                {# - Main bricks (only iMaxDisplayedItems are displayed directly, next ones will be in a dropdown menu) #}
+				{% set iDisplayedItems = 1 %}{# 1 because of Home #}
+				{% set iMaxDisplayedItems = {'sm': 2, 'md': 3, 'lg': 5} %}
+				{% set sExtraBricksMenuClass = '' %}
+
+				{% for brick in app['combodo.portal.instance.conf'].bricks_ordering.navigation_menu %}
+					{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
+						{# Hiding some bricks in on small screens #}
+						{% set sCurrentBrickClass = '' %}
+						{% if iDisplayedItems >= iMaxDisplayedItems['sm'] %}
+							{% set sCurrentBrickClass = sCurrentBrickClass ~ ' hidden-sm' %}
+							{% set sExtraBricksMenuClass = sExtraBricksMenuClass ~ ' visible-sm' %}
+						{% endif %}
+						{% if iDisplayedItems >= iMaxDisplayedItems['md'] %}
+							{% set sCurrentBrickClass = sCurrentBrickClass ~ ' hidden-md' %}
+							{% set sExtraBricksMenuClass = sExtraBricksMenuClass ~ ' visible-md' %}
+						{% endif %}
+						{% if iDisplayedItems >= iMaxDisplayedItems['lg'] %}
+							{% set sCurrentBrickClass = sCurrentBrickClass ~ ' hidden-lg' %}
+							{% set sExtraBricksMenuClass = sExtraBricksMenuClass ~ ' visible-lg' %}
+						{% endif %}
+
+						<li class="{% if oBrick is defined and brick.id == oBrick.id %}active{% endif %} {{ sCurrentBrickClass }}">
+							<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %} title="{{ brick.GetTitleNavigationMenu|dict_s }}">
+								<span class="brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
+								{{ brick.GetTitleNavigationMenu|dict_s }}
+							</a>
+						</li>
+						{% set iDisplayedItems = iDisplayedItems + 1 %}
+					{% endif %}
+				{% endfor %}
+
+				{# - Extra bricks #}
+                <li class="dropdown {{ sExtraBricksMenuClass }}">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						{{ 'Portal:Button:More'|dict_s }}
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+                        {% set iDisplayedItems = 1 %}{# 1 because of Home #}
+                        {% for brick in app['combodo.portal.instance.conf'].bricks_ordering.navigation_menu %}
+							{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
+                                {# Putting some bricks in extra menu on small screens #}
+                                {% set sCurrentBrickClass = '' %}
+                                {% if iDisplayedItems < iMaxDisplayedItems['sm'] %}
+                                    {% set sCurrentBrickClass = sCurrentBrickClass ~ ' hidden-sm' %}
+                                {% endif %}
+                                {% if iDisplayedItems < iMaxDisplayedItems['md'] %}
+                                    {% set sCurrentBrickClass = sCurrentBrickClass ~ ' hidden-md' %}
+                                {% endif %}
+                                {% if iDisplayedItems < iMaxDisplayedItems['lg'] %}
+                                    {% set sCurrentBrickClass = sCurrentBrickClass ~ ' hidden-lg' %}
+                                {% endif %}
+
+								<li class="{% if oBrick is defined and brick.id == oBrick.id %}active{% endif %} {{ sCurrentBrickClass }}">
+									<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %} title="{{ brick.GetTitleNavigationMenu|dict_s }}">
+									<span class="brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
+									{{ brick.GetTitleNavigationMenu|dict_s }}
+									</a>
+								</li>
+                                {% set iDisplayedItems = iDisplayedItems + 1 %}
+							{% endif %}
+						{% endfor %}
+					</ul>
+				</li>
+
+				{# User profile, portals, ... #}
+				{% if bUserConnected %}
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="brick_icon fa fa-cogs fa-2x fa-fw"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="fa fa-user fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
+                            {% for aPortal in app['combodo.portal.instance.conf'].portals %}
+                                {% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}
+                                    {% set sGlyphiconClass = (aPortal.id == 'backoffice') ? 'fa-list-alt' : 'fa-external-link' %}
+									<li><a href="{{ aPortal.url }}" {% if app['combodo.portal.instance.conf'].properties.allowed_portals.opening_mode == 'tab' %}target="_blank"{% endif %} title="{{ aPortal.label|dict_s }}"><span class="brick_icon fa {{ sGlyphiconClass }} fa-lg fa-fw"></span>{{ aPortal.label|dict_s }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {# We display the separator only if the user has more then 1 portal. Meaning default portal + console or several portal at least #}
+                            {% if app['combodo.portal.instance.conf'].portals|length > 1 %}
+								<li role="separator" class="divider"></li>
+                            {% endif %}
+							<li><a href="{{ app['combodo.absolute_url'] }}pages/logoff.php"><span class="fa fa-sign-out fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:Logout'|dict_s }}</a></li>
+						</ul>
+					</li>
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+</nav>
+{% endblock %}
+
+{# Main wrapper taking ful width now #}
+{% block pMainWrapper %}
+	<div class="container-fluid" id="main-wrapper">
+		<div class="row">
+			<div class="col-xs-12">
+
+				<section class="row" id="main-header">
+                    {% block pMainHeader %}
+						{{ parent() }}
+                    {% endblock %}
+				</section>
+
+				<section class="row" id="main-content">
+                    {% block pMainContent %}
+						{{ parent() }}
+                    {% endblock %}
+				</section>
+			</div>
+		</div>
+
+        {% block pPageUIExtensionMainContent %}
+			{{ parent() }}
+        {% endblock %}
+	</div>
+{% endblock %}

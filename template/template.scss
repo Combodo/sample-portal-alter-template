@@ -1,0 +1,86 @@
+/* Variables */
+/* - Variables from default combodo theme */
+@import 'variables.scss';
+
+/* Sidebar is not visible on mobile, so we don't handle screens smaller than 768px */
+@media (min-width: 768px) {
+  #sidebar{
+    position: initial;
+    padding: 0px;
+    height: 45px;
+
+    .navbar-header{
+      .navbar-brand{
+        height: 45px; /* #sidebar height */
+
+        > img{
+          max-height: 100%
+        }
+      }
+
+      .navbar-text{
+        margin-top: 4px;
+        margin-bottom: 6px;
+
+        .header_title,
+        .header_user{
+          max-width: 250px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          color: $white;
+        }
+        .header_title{
+          font-size: 14px;
+        }
+        .header_user{
+          font-size: 11px;
+        }
+      }
+    }
+
+    .navbar-nav > li:after,
+    .navbar-nav > li:hover:after,
+    .navbar-nav > li:focus:after,
+    .navbar-nav > li.active:after{
+      position: relative;
+      top: inherit;
+      right: inherit;
+      bottom: 4px;
+      width: 100%;
+      border: none;
+    }
+    .navbar-nav > li:hover:after,
+    .navbar-nav > li:focus:after,
+    .navbar-nav > li.active:after {
+      border-bottom: 3px solid $combodo-orange;
+    }
+    .navbar-nav > li > a{
+      max-width: 180px;
+      padding: 0 13px;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      line-height: 45px;
+      font-size: 13px;
+    }
+
+    .nav > li > a > span.brick_icon, .dropdown-menu > li > a > span.brick_icon{
+      margin-right: 5px;
+      vertical-align: initial;
+      font-size: 1.2em;
+    }
+
+    &.navbar-default .navbar-nav > li > a:hover, &.navbar-default .navbar-nav > li > a:focus, &.navbar-default .navbar-nav > .active > a:hover, &.navbar-default .navbar-nav > .active > a:focus{
+      color: $white;
+      background-color: inherit;
+    }
+    &.navbar-default .navbar-nav > .active > a{
+      margin-top: inherit;
+      color: $white;
+      background-color: inherit;
+      font-weight: inherit;
+      box-shadow: none;
+    }
+  }
+}

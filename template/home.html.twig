@@ -1,0 +1,26 @@
+{# sample-portal-alter-template/template/layout.html.twig #}
+{# Home layout #}
+{% extends 'itop-portal-base/portal/src/views/home/layout.html.twig' %}
+
+{# Note: Only modification is that #main-wrapper that is always 12 wide on the grid as there is no sidebar anymore #}
+
+{% block pMainWrapper %}
+{% set iCurrentTileIndex = 0 %}
+<div class="container-fluid" id="main-wrapper">
+	<div class="row">
+		<div class="col-xs-12">
+			<section class="row tiles_wrapper">
+				{% for brick in app['combodo.portal.instance.conf'].bricks_ordering.home %}
+					{% if brick.GetVisibleHome %}
+						{% if aTilesRendering[brick.GetId] is defined %}
+							{{ aTilesRendering[brick.GetId]|raw }}
+						{% else %}
+							{% include '' ~ brick.GetTileTemplatePath with {brick: brick} %}
+						{% endif %}
+					{% endif %}
+				{% endfor %}
+			</section>
+		</div>
+	</div>
+</div>
+{% endblock %}

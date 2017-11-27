@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4">
+    <module_designs>
+        <module_design id="itop-portal" xsi:type="portal" _delta="must_exist">
+            <properties>
+                <themes>
+                    <theme id="custom" _delta="force">./sample-portal-alter-template/template/template.scss</theme>
+                </themes>
+                <templates>
+                    <template id="home" _delta="force">./sample-portal-alter-template/template/home.html.twig</template>
+                    <template id="layout" _delta="force">./sample-portal-alter-template/template/layout.html.twig</template>
+                </templates>
+            </properties>
+        </module_design>
+    </module_designs>
+</itop_design>

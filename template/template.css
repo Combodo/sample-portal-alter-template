@@ -1,0 +1,70 @@
+/* Variables */
+/* - Variables from default combodo theme */
+/* Sidebar is not visible on mobile, so we don't handle screens smaller than 768px */
+@media (min-width: 768px) {
+  #sidebar {
+    position: initial;
+    padding: 0px;
+    height: 45px;
+  }
+  #sidebar .navbar-header .navbar-brand {
+    height: 45px;
+    /* #sidebar height */
+  }
+  #sidebar .navbar-header .navbar-brand > img {
+    max-height: 100%;
+  }
+  #sidebar .navbar-header .navbar-text {
+    margin-top: 4px;
+    margin-bottom: 6px;
+  }
+  #sidebar .navbar-header .navbar-text .header_title, #sidebar .navbar-header .navbar-text .header_user {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #fff;
+  }
+  #sidebar .navbar-header .navbar-text .header_title {
+    font-size: 14px;
+  }
+  #sidebar .navbar-header .navbar-text .header_user {
+    font-size: 11px;
+  }
+  #sidebar .navbar-nav > li:after, #sidebar .navbar-nav > li:hover:after, #sidebar .navbar-nav > li:focus:after, #sidebar .navbar-nav > li.active:after {
+    position: relative;
+    top: inherit;
+    right: inherit;
+    bottom: 4px;
+    width: 100%;
+    border: none;
+  }
+  #sidebar .navbar-nav > li:hover:after, #sidebar .navbar-nav > li:focus:after, #sidebar .navbar-nav > li.active:after {
+    border-bottom: 3px solid #ea7d1e;
+  }
+  #sidebar .navbar-nav > li > a {
+    max-width: 180px;
+    padding: 0 13px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 45px;
+    font-size: 13px;
+  }
+  #sidebar .nav > li > a > span.brick_icon, #sidebar .dropdown-menu > li > a > span.brick_icon {
+    margin-right: 5px;
+    vertical-align: initial;
+    font-size: 1.2em;
+  }
+  #sidebar.navbar-default .navbar-nav > li > a:hover, #sidebar.navbar-default .navbar-nav > li > a:focus, #sidebar.navbar-default .navbar-nav > .active > a:hover, #sidebar.navbar-default .navbar-nav > .active > a:focus {
+    color: #fff;
+    background-color: inherit;
+  }
+  #sidebar.navbar-default .navbar-nav > .active > a {
+    margin-top: inherit;
+    color: #fff;
+    background-color: inherit;
+    font-weight: inherit;
+    box-shadow: none;
+  }
+}
