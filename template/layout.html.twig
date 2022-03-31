@@ -1,6 +1,6 @@
 {# sample-portal-alter-template/template/layout.html.twig #}
 {# Base layout #}
-{% extends 'itop-portal-base/portal/src/views/layout.html.twig' %}
+{% extends 'itop-portal-base/portal/templates/layout.html.twig' %}
 
 {# Note: Puts sidebar on top of the screen #}
 
@@ -37,7 +37,7 @@
 
                 {# - Checking if there are some bricks left to pu in a dropdown menu #}
                 {% set iActiveItems = 1 %}{# 1 because of Home #}
-                {% for brick in app['combodo.portal.instance.conf'].bricks_ordering.navigation_menu %}
+                {% for brick in app['brick_collection'].navigation_menu_ordering  %}
                     {% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
                         {%  set iActiveItems = iActiveItems + 1 %}
                     {% endif %}
@@ -48,7 +48,7 @@
 				{% set iMaxDisplayedItems = {'sm': 2, 'md': 3, 'lg': 5} %}
 				{% set sExtraBricksMenuClass = '' %}
 
-				{% for brick in app['combodo.portal.instance.conf'].bricks_ordering.navigation_menu %}
+				{% for brick in app['brick_collection'].navigation_menu_ordering %}
 					{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
 						{# Hiding some bricks in on small screens #}
 						{% set sCurrentBrickClass = '' %}
@@ -83,7 +83,7 @@
 					</a>
 					<ul class="dropdown-menu">
                         {% set iDisplayedItems = 1 %}{# 1 because of Home #}
-                        {% for brick in app['combodo.portal.instance.conf'].bricks_ordering.navigation_menu %}
+                        {% for brick in app['brick_collection'].navigation_menu_ordering %}
 							{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
                                 {# Putting some bricks in extra menu on small screens #}
                                 {% set sCurrentBrickClass = '' %}
@@ -115,14 +115,14 @@
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="brick_icon fa fa-cogs fa-2x fa-fw"></span></a>
 						<ul class="dropdown-menu">
 							<li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="fa fa-user fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
-                            {% for aPortal in app['combodo.portal.instance.conf'].portals %}
+                            {% for aPortal in app['combodo.current_user.allowed_portals'] %}
                                 {% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}
                                     {% set sGlyphiconClass = (aPortal.id == 'backoffice') ? 'fa-list-alt' : 'fa-external-link' %}
 									<li><a href="{{ aPortal.url }}" {% if app['combodo.portal.instance.conf'].properties.allowed_portals.opening_mode == 'tab' %}target="_blank"{% endif %} title="{{ aPortal.label|dict_s }}"><span class="brick_icon fa {{ sGlyphiconClass }} fa-lg fa-fw"></span>{{ aPortal.label|dict_s }}</a></li>
                                 {% endif %}
                             {% endfor %}
                             {# We display the separator only if the user has more then 1 portal. Meaning default portal + console or several portal at least #}
-                            {% if app['combodo.portal.instance.conf'].portals|length > 1 %}
+                            {% if app['combodo.current_user.allowed_portals']|length > 1 %}
 								<li role="separator" class="divider"></li>
                             {% endif %}
 							<li><a href="{{ app['combodo.absolute_url'] }}pages/logoff.php"><span class="fa fa-sign-out fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:Logout'|dict_s }}</a></li>

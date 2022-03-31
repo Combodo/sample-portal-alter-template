@@ -2,14 +2,14 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'sample-portal-alter-template/1.0.0', array(
+	'sample-portal-alter-template/1.1.0', array(
 	// Identification
 	'label' => 'Sample portal: Alter template by moving menu from left to top',
 	'category' => 'Portal',
 	// Setup
 	'dependencies' => array(
-		'itop-portal-base/2.4.0',
-		'itop-portal/2.4.0',
+		'itop-portal-base/2.7.0',
+		'itop-portal/2.7.0',
 	),
 	'mandatory' => false,
 	'visible' => true,
